@@ -1,0 +1,11 @@
+export { default as Hero } from "./Hero";
+export { default as Offers } from "./Offers";
+export { default as Services } from "./Services";
+export { default as Featured } from "./Featured";
+export { default as Categories } from "./Categories";
+export { default as Guides } from "./Guides";
+export { default as Places } from "./Places";
+export { default as Hotels } from "./Hotels";
+export { default as Reviews } from "./Reviews";
+export { default as WhyUs } from "./WhyUs";
+export { default as FAQ } from "./FAQ";
