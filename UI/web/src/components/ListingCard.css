@@ -1,0 +1,42 @@
+.listing-card {
+  text-decoration: none;
+  color: inherit;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.listing-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.listing-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.card-body {
+  padding: 14px;
+}
+
+.card-body h3 {
+  font-size: 16px;
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.card-body p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 8px;
+}
+
+.card-body strong {
+  font-size: 15px;
+  font-weight: 600;
+}

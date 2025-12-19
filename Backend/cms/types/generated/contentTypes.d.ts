@@ -505,7 +505,7 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     singularName: 'listing';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     amenities: Schema.Attribute.Relation<'manyToMany', 'api::amenity.amenity'>;

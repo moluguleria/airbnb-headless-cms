@@ -1,0 +1,80 @@
+/* ===== Page Wrapper ===== */
+.add-listing {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Title ===== */
+.add-listing h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* ===== Form ===== */
+.add-listing form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== Labels ===== */
+.add-listing label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* ===== Inputs & Select ===== */
+.add-listing input,
+.add-listing select,
+.add-listing textarea {
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-listing input:focus,
+.add-listing select:focus,
+.add-listing textarea:focus {
+  border-color: #ff385c;
+  box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.15);
+}
+
+/* ===== Button ===== */
+.add-listing button {
+  margin-top: 10px;
+  background: #ff385c;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.add-listing button:hover {
+  background: #e03150;
+  transform: translateY(-1px);
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+  .add-listing {
+    margin: 20px;
+    padding: 24px;
+  }
+
+  .add-listing h2 {
+    font-size: 22px;
+  }
+}

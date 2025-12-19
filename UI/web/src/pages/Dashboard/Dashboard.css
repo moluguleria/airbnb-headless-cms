@@ -1,0 +1,71 @@
+/* ===== Dashboard Wrapper ===== */
+.dashboard {
+  padding: 40px 80px;
+  min-height: calc(100vh - 80px);
+  background: #fafafa;
+}
+
+/* ===== Header ===== */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.dashboard-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* ===== Add Property Button ===== */
+.add-btn {
+  background: #ff385c;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #e03150;
+}
+
+/* ===== Grid (reuse style) ===== */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  margin-top: 60px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.empty-state p {
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 20px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .dashboard-header h2 {
+    font-size: 22px;
+  }
+}

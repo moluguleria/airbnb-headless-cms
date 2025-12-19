@@ -52,6 +52,9 @@ export default function Navbar() {
                   Sign up
                 </button>
               </Link>
+<Link to="/dashboard">Dashboard</Link>
+
+
             </>
           ) : (
             <>
@@ -69,6 +72,7 @@ export default function Navbar() {
               >
                 Logout
               </button>
+              <Link to="/dashboard">Dashboard</Link>
             </>
           )}
         </div>
