@@ -12,6 +12,7 @@ export default function AddListing() {
     title: "",
     price: "",
     type: "stay",
+    description: "",
     city: "",
     country: "",
     amenities: "",
@@ -29,138 +30,128 @@ export default function AddListing() {
     }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
 
-    /* 1️⃣ Upload images */
-    let imageIds = [];
-    if (images.length > 0) {
-      const fd = new FormData();
-      images.forEach((img) => fd.append("files", img));
-      const uploadRes = await API.post("/upload", fd);
-      imageIds = uploadRes.data.map((f) => f.id);
-    }
+    try {
+      /* 1️⃣ Upload images */
+      let imageIds = [];
+      if (images.length) {
+        const fd = new FormData();
+        images.forEach((img) => fd.append("files", img));
+        const uploadRes = await API.post("/upload", fd);
+        imageIds = uploadRes.data.map((f) => f.id);
+      }
 
-    /* 2️⃣ Create Location */
-    const locationRes = await API.post("/locations", {
-      data: {
-        city: form.city,
-        country: form.country,
-      },
-    });
-
-    const locationId = locationRes.data.data.id;
-
-    /* 3️⃣ Create Amenities */
-    const amenityNames = form.amenities
-      .split(",")
-      .map((a) => a.trim())
-      .filter(Boolean);
-
-    const amenityIds = [];
-
-    for (let name of amenityNames) {
-      const res = await API.post("/amenities", {
-        data: { name },
+      /* 2️⃣ Create Location */
+      const locationRes = await API.post("/locations", {
+        data: {
+          city: form.city,
+          country: form.country,
+        },
       });
-      amenityIds.push(res.data.data.id);
-    }
+      const locationId = locationRes.data.data.id;
 
-    /* 4️⃣ CREATE LISTING — ONLY ONCE */
-  await API.post("/listings", {
+      /* 3️⃣ Create Provider (from logged-in user) */
+      const providerRes = await API.post("/providers", {
+        data: {
+          name: user.username,
+          verified: true,
+        },
+      });
+      const providerId = providerRes.data.data.id;
+
+      /* 4️⃣ Create Amenities */
+      const amenityNames = form.amenities
+        .split(",")
+        .map((a) => a.trim())
+        .filter(Boolean);
+
+      const amenityIds = [];
+      for (const name of amenityNames) {
+        const res = await API.post("/amenities", {
+          data: { name },
+        });
+        amenityIds.push(res.data.data.id);
+      }
+
+      /* 5️⃣ Create Listing (ONLY ONCE) */
+    await API.post("/listings", {
   data: {
     title: form.title,
-    price: Number(form.price),
     type: form.type,
+    price: Number(form.price),
     featured: form.featured,
+
+    description: [
+      {
+        type: "paragraph",
+        children: [
+          {
+            type: "text",
+            text: form.description || ""
+          }
+        ]
+      }
+    ],
+
     location: locationId,
+    provider: providerId,
     amenities: amenityIds,
     images: imageIds,
+
     publishedAt: new Date().toISOString(),
   },
 });
 
 
-    navigate("/dashboard");
-  } catch (err) {
-    console.error("Create listing failed:", err.response?.data || err);
-    alert("Failed to create listing. Check console.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Create listing failed:", err.response?.data || err);
+      alert("Failed to create listing");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="add-listing">
       <h2>Add New Property</h2>
 
       <form onSubmit={handleSubmit}>
-        <label>Title</label>
-        <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          required
-        />
+        <input name="title" placeholder="Title" onChange={handleChange} required />
+        <input name="price" type="number" placeholder="Price" onChange={handleChange} required />
 
-        <label>Price (per night)</label>
-        <input
-          name="price"
-          type="number"
-          value={form.price}
-          onChange={handleChange}
-          required
-        />
-
-        <label>Type</label>
-        <select name="type" value={form.type} onChange={handleChange}>
+        <select name="type" onChange={handleChange}>
           <option value="stay">Stay</option>
           <option value="experience">Experience</option>
           <option value="rental">Rental</option>
         </select>
 
-        <label>City</label>
-        <input name="city" value={form.city} onChange={handleChange} required />
-
-        <label>Country</label>
-        <input
-          name="country"
-          value={form.country}
+        <textarea
+          name="description"
+          placeholder="Description"
           onChange={handleChange}
-          required
         />
 
-        <label>Amenities (comma separated)</label>
+        <input name="city" placeholder="City" onChange={handleChange} />
+        <input name="country" placeholder="Country" onChange={handleChange} />
+
         <input
           name="amenities"
-          value={form.amenities}
+          placeholder="WiFi, Parking"
           onChange={handleChange}
-          placeholder="WiFi, Parking, AC"
         />
 
         <label>
-          <input
-            type="checkbox"
-            name="featured"
-            checked={form.featured}
-            onChange={handleChange}
-          />
+          <input type="checkbox" name="featured" onChange={handleChange} />
           Featured
         </label>
 
-        <label>Images</label>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={(e) => setImages([...e.target.files])}
-        />
+        <input type="file" multiple onChange={(e) => setImages([...e.target.files])} />
 
-        <button type="submit" disabled={loading}>
+        <button disabled={loading}>
           {loading ? "Creating..." : "Create Property"}
         </button>
       </form>

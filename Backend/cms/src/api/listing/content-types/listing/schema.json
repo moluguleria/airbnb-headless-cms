@@ -62,6 +62,12 @@
       "relation": "manyToOne",
       "target": "api::provider.provider",
       "inversedBy": "listings"
+    },
+    "owner": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "listings"
     }
   }
 }

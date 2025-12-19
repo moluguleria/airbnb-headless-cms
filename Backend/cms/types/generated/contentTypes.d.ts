@@ -475,7 +475,7 @@ export interface ApiAmenityAmenity extends Struct.CollectionTypeSchema {
     singularName: 'amenity';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -525,6 +525,10 @@ export interface ApiListingListing extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     location: Schema.Attribute.Relation<'manyToOne', 'api::location.location'>;
+    owner: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     price: Schema.Attribute.BigInteger;
     provider: Schema.Attribute.Relation<'manyToOne', 'api::provider.provider'>;
     publishedAt: Schema.Attribute.DateTime;
@@ -545,7 +549,7 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     singularName: 'location';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     city: Schema.Attribute.String;
@@ -575,7 +579,7 @@ export interface ApiProviderProvider extends Struct.CollectionTypeSchema {
     singularName: 'provider';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     avatar: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
@@ -1054,7 +1058,6 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1068,6 +1071,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    listings: Schema.Attribute.Relation<'oneToMany', 'api::listing.listing'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
