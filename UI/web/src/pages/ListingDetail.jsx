@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getListingBySlug, API } from "../api/api";
 import { useAuth } from "../context/AuthContext";
@@ -9,40 +9,59 @@ const STRAPI_URL =
 
 export default function ListingDetail() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({
+    title: "",
+    price: "",
+    description: "",
+    city: "",
+    country: "",
+  });
 
   const [showModal, setShowModal] = useState(false);
   const [activeImg, setActiveImg] = useState(0);
   const [saved, setSaved] = useState(false);
-  const [dates, setDates] = useState({ checkin: "", checkout: "" });
 
-  /* FETCH LISTING */
+  /* ================= FETCH LISTING ================= */
   useEffect(() => {
-    getListingBySlug(slug).then((res) => {
-      const data = res.data.data[0];
-      setListing(data);
+    async function fetchListing() {
+      try {
+        const res = await getListingBySlug(slug);
+        if (!res.data.data.length) {
+          setLoading(false);
+          return;
+        }
 
-      const description =
-        data.description
-          ?.map((b) => b.children.map((c) => c.text).join(""))
-          .join("\n") || "";
+        const data = res.data.data[0];
+        setListing(data);
 
-      setForm({
-        title: data.title,
-        price: data.price,
-        description,
-        city: data.location?.city || "",
-        country: data.location?.country || "",
-      });
+        const description =
+          data.description
+            ?.map((b) => b.children.map((c) => c.text).join(""))
+            .join("\n") || "";
 
-      setLoading(false);
-    });
+        setForm({
+          title: data.title,
+          price: data.price,
+          description,
+          city: data.location?.city || "",
+          country: data.location?.country || "",
+        });
+
+        setLoading(false);
+      } catch (err) {
+        console.error("FETCH ERROR:", err);
+        setLoading(false);
+      }
+    }
+
+    fetchListing();
   }, [slug]);
 
   /* LOCK SCROLL WHEN MODAL OPEN */
@@ -51,43 +70,66 @@ export default function ListingDetail() {
   }, [showModal]);
 
   if (loading) return <Skeleton />;
+  if (!listing) return <p>Listing not found</p>;
 
   const isOwner = listing.owner?.id === user?.id;
 
-  /* SAVE CHANGES */
+  /* ================= SAVE CHANGES ================= */
   const handleSave = async () => {
     try {
-      // Update listing
-      await API.put(`/listings/${listing.id}`, {
-  data: {
-    title: form.title,
-    price: form.price,
-    description: [
-      {
-        type: "paragraph",
-        children: [
-          { type: "text", text: form.description }
-        ]
-      }
-    ],
-  },
-});
+      await API.put(`/listings/${listing.documentId}`, {
+        data: {
+          title: form.title,
+          price: Number(form.price),
+          description: [
+            {
+              type: "paragraph",
+              children: [{ type: "text", text: form.description }],
+            },
+          ],
+          location: listing.location?.id || null,
+        },
+      });
+    } catch {
+      alert("Failed to update listing");
+      return;
+    }
 
-
-      // Update location
+    try {
       if (listing.location?.id) {
-        await API.put(`/locations/${listing.location.id}`, {
+        await API.put(`/locations/${listing.location.documentId}`, {
           data: {
             city: form.city,
             country: form.country,
           },
         });
       }
+    } catch {
+      console.warn("Location update failed");
+    }
 
-      window.location.reload();
+    window.location.reload();
+  };
+
+  /* ================= DELETE LISTING ================= */
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this listing? This action cannot be undone."
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await API.delete(`/listings/${listing.documentId}`);
+
+      if (listing.location?.id) {
+        await API.delete(`/locations/${listing.location.id}`);
+      }
+
+      alert("Listing deleted successfully");
+      navigate("/dashboard");
     } catch (err) {
-      console.error("Update failed", err);
-      alert("Failed to save changes");
+      console.error("DELETE ERROR:", err);
+      alert("Failed to delete listing");
     }
   };
 
@@ -96,29 +138,41 @@ export default function ListingDetail() {
       {/* ---------- GALLERY ---------- */}
       <section className="gallery">
         {isOwner && (
-          <button className="edit-btn" onClick={() => setEditMode(!editMode)}>
-            {editMode ? "Cancel" : "Edit listing"}
-          </button>
+          <div className="owner-actions">
+            <button
+              className="edit-btn"
+              onClick={() => setEditMode(!editMode)}
+            >
+              {editMode ? "Cancel" : "Edit listing"}
+            </button>
+
+            <button className="delete-btn" onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
         )}
 
         <button className="save-btn" onClick={() => setSaved(!saved)}>
           {saved ? "❤️ Saved" : "🤍 Save"}
         </button>
 
-        <img
-          className="gallery-main"
-          src={`${STRAPI_URL}${listing.images?.[0]?.url}`}
-          onClick={() => {
-            setActiveImg(0);
-            setShowModal(true);
-          }}
-          alt={listing.title}
-        />
+        {listing.images?.length > 0 ? (
+          <img
+            className="gallery-main"
+            src={`${STRAPI_URL}${listing.images[0].url}`}
+            onClick={() => {
+              setActiveImg(0);
+              setShowModal(true);
+            }}
+            alt={listing.title}
+          />
+        ) : (
+          <div className="gallery-placeholder">No image uploaded</div>
+        )}
       </section>
 
       {/* ---------- CONTENT ---------- */}
       <section className="content">
-        {/* LEFT */}
         <div className="left">
           {editMode ? (
             <input
@@ -217,13 +271,27 @@ export default function ListingDetail() {
           <hr />
           <h3>Contact host</h3>
 
-          <div className="contact-card">
-            <div className="contact-info">
-              <h4>{listing.provider.name}</h4>
+          <div className="listing-contact-card">
+            <div className="listing-contact-info">
+              <h4>{listing.provider.name || "John Doe"}</h4>
+
               {listing.provider.verified && (
-                <span className="verified-badge">✔ Verified Host</span>
+                <span className="listing-verified-badge">
+                  ✔ Verified Host
+                </span>
               )}
-              <p>Usually responds within a few hours</p>
+
+              <p className="listing-contact-note">
+                📧 Email: <strong>host@example.com</strong>
+              </p>
+
+              <p className="listing-contact-note">
+                📞 Phone: <strong>+91 98765 43210</strong>
+              </p>
+
+              <p className="listing-contact-note">
+                Usually responds within a few hours
+              </p>
             </div>
           </div>
         </>
@@ -234,7 +302,6 @@ export default function ListingDetail() {
         <>
           <hr />
           <h3>Where you’ll be</h3>
-
           <div className="map-card">
             <iframe
               title="map"
@@ -248,7 +315,7 @@ export default function ListingDetail() {
       )}
 
       {/* ---------- IMAGE MODAL ---------- */}
-      {showModal && (
+      {showModal && listing.images?.[activeImg] && (
         <div className="modal" onClick={() => setShowModal(false)}>
           <img
             src={`${STRAPI_URL}${listing.images[activeImg].url}`}

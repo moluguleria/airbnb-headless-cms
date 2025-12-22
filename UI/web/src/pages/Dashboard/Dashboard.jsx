@@ -35,10 +35,6 @@ useEffect(() => {
     });
 }, [user]);
 
-
-
-
-
   /* ---------- UI STATES ---------- */
 
   if (loading) {
