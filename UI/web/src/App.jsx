@@ -8,13 +8,22 @@ import ListingDetail from "./pages/ListingDetail";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 
-/* DASHBOARD */
+/* USER DASHBOARD */
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddListing from "./pages/Dashboard/AddListing";
 import EditListing from "./pages/Dashboard/EditListing";
 
-/* PROTECTION */
+/* ADMIN */
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminListings from "./pages/admin/AdminListings";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminBookings from "./pages/admin/AdminBookings";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+
+/* ROUTE GUARDS */
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./routes/AdminRoute";
 
 export default function App() {
   return (
@@ -24,15 +33,12 @@ export default function App() {
       <Routes>
         {/* ================= PUBLIC ROUTES ================= */}
         <Route path="/" element={<Home />} />
-
         <Route path="/listings/:type" element={<Listings />} />
-
         <Route path="/listing/:slug" element={<ListingDetail />} />
-
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* ================= DASHBOARD ROUTES ================= */}
+        {/* ================= USER DASHBOARD ================= */}
         <Route
           path="/dashboard"
           element={
@@ -60,7 +66,23 @@ export default function App() {
           }
         />
 
-        {/* ================= FALLBACK (OPTIONAL) ================= */}
+        {/* ================= ADMIN ROUTES (NESTED & CLEAN) ================= */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="listings" element={<AdminListings />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="bookings" element={<AdminBookings />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+        </Route>
+
+        {/* ================= FALLBACK ================= */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </>

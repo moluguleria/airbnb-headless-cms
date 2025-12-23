@@ -24,7 +24,12 @@ export default function Login() {
     try {
       const res = await loginUser(form);
       login(res.data);
-      navigate("/");
+
+      if (res.data.user.role?.name === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch {
       setError("Invalid email or password");
     } finally {
@@ -55,18 +60,14 @@ export default function Login() {
               type="email"
               placeholder="E-mail Address"
               required
-              onChange={(e) =>
-                setForm({ ...form, identifier: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, identifier: e.target.value })}
             />
 
             <input
               type="password"
               placeholder="Password"
               required
-              onChange={(e) =>
-                setForm({ ...form, password: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
 
             <button className="primary-btn" disabled={loading}>
