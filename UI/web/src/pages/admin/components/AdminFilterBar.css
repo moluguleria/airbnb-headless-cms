@@ -1,0 +1,114 @@
+/* ===============================
+   FILTER WRAPPER
+================================ */
+.admin-filter-wrapper {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+/* ===============================
+   TOP FILTER ROW
+================================ */
+.admin-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* INPUTS */
+.admin-filter-input,
+.admin-filter-select,
+.admin-filter-date {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #ffffff;
+  min-width: 160px;
+}
+
+.admin-filter-date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-filter-date-range span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===============================
+   ACTION ROW
+================================ */
+.admin-filter-actions-row {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.admin-filter-actions-left,
+.admin-filter-actions-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn.primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn.secondary {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.btn.outline {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.btn.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.btn.danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .admin-filter-actions-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

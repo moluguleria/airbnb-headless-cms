@@ -1,0 +1,147 @@
+.admin-settings-root {
+  padding: 32px;
+}
+
+/* HEADER */
+.admin-settings-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.admin-settings-header p {
+  margin-top: 6px;
+  color: #6b7280;
+}
+
+/* LAYOUT */
+.admin-settings-layout {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+}
+
+/* NAV */
+.admin-settings-nav {
+  background: linear-gradient(180deg, #0f172a, #020617);
+  padding: 18px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-settings-nav button {
+  background: none;
+  border: none;
+  padding: 14px 16px;
+  border-radius: 12px;
+  text-align: left;
+  color: #c7d2fe;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.admin-settings-nav button.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* CONTENT */
+.admin-settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* CARD */
+.settings-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+}
+
+.settings-card-header {
+  padding: 22px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.settings-card-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.settings-card-header p {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.settings-card-body {
+  padding: 24px;
+  display: grid;
+  gap: 18px;
+}
+
+.settings-card-footer {
+  padding: 18px 24px;
+  border-top: 1px solid #f1f5f9;
+  text-align: right;
+}
+
+/* FORM */
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-field label {
+  font-size: 13px;
+  color: #475569;
+}
+
+.settings-field input,
+.settings-field select {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+/* TOGGLE */
+.settings-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* BUTTONS */
+.primary-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.danger-btn {
+  background: #dc2626;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .admin-settings-layout {
+    grid-template-columns: 1fr;
+  }
+}

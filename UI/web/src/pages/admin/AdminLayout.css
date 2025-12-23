@@ -1,8 +1,89 @@
-.admin-content {
-  display: none;
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f9fafb;
 }
-/* or */
-.admin-layout {
-  height: 0;
-  overflow: hidden;
+
+/* SIDEBAR */
+.admin-sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, #0f172a, #020617);
+  color: #fff;
+  padding: 24px;
+}
+
+.admin-logo {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-nav a {
+  text-decoration: none;
+  color: #cbd5f5;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.admin-nav a:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.admin-nav a.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* MAIN */
+.admin-main {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+}
+.admin-page-header {
+  margin-bottom: 24px;
+}
+
+.admin-page-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.admin-page-header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.admin-panel {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 20px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th {
+  text-align: left;
+  font-size: 12px;
+  color: #6b7280;
+  padding-bottom: 12px;
+}
+
+.admin-table td {
+  padding: 14px 0;
+  border-top: 1px solid #f3f4f6;
 }

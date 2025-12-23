@@ -38,10 +38,10 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-page">
+    <div className="authx-page">
       {/* LEFT */}
-      <div className="auth-left">
-        <div className="auth-left-content">
+      <div className="authx-left">
+        <div className="authx-left-content">
           <h2>Welcome to</h2>
           <h1>Staybnb</h1>
           <p>Login and continue your journey with us.</p>
@@ -49,32 +49,36 @@ export default function Login() {
       </div>
 
       {/* RIGHT */}
-      <div className="auth-right">
-        <div className="auth-card-wrapper">
-          <form className="auth-card" onSubmit={handleSubmit}>
+      <div className="authx-right">
+        <div className="authx-card-wrapper">
+          <form className="authx-card" onSubmit={handleSubmit}>
             <h2>Login</h2>
 
-            {error && <div className="error">{error}</div>}
+            {error && <div className="authx-error">{error}</div>}
 
             <input
               type="email"
               placeholder="E-mail Address"
               required
-              onChange={(e) => setForm({ ...form, identifier: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, identifier: e.target.value })
+              }
             />
 
             <input
               type="password"
               placeholder="Password"
               required
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, password: e.target.value })
+              }
             />
 
-            <button className="primary-btn" disabled={loading}>
+            <button className="authx-primary-btn" disabled={loading}>
               {loading ? "Signing in..." : "Log In"}
             </button>
 
-            <Link to="/signup" className="ghost-btn">
+            <Link to="/signup" className="authx-ghost-btn">
               Sign Up
             </Link>
           </form>

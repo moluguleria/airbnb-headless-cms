@@ -59,14 +59,18 @@ export default function Navbar() {
               <span className="nav-user">Hi, {user.username}</span>
 
               {user?.role?.name === "admin" ? (
+                console.log("NAVBAR USER:", user),
                 <Link to="/admin/dashboard" className="nav-dashboard">
                   Dashboard
                 </Link>
+                
               ) : (
                 <Link to="/dashboard" className="nav-dashboard">
                   Dashboard
                 </Link>
               )}
+              
+
 
               <button
                 className="nav-logout"

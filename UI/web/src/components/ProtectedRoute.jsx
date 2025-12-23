@@ -7,7 +7,6 @@ export default function ProtectedRoute({ children }) {
   if (loading) return null;
   if (!user) return <Navigate to="/login" replace />;
 
-  // 👇 redirect admin away from user dashboard
   if (user.role?.name === "admin") {
     return <Navigate to="/admin/dashboard" replace />;
   }

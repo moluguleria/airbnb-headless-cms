@@ -34,10 +34,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="auth-page">
+    <div className="authx-page">
       {/* LEFT */}
-      <div className="auth-left">
-        <div className="auth-left-content">
+      <div className="authx-left">
+        <div className="authx-left-content">
           <h2>Welcome to</h2>
           <h1>Staybnb</h1>
           <p>Create your account and get started.</p>
@@ -45,12 +45,12 @@ export default function Signup() {
       </div>
 
       {/* RIGHT */}
-      <div className="auth-right">
-        <div className="auth-card-wrapper">
-          <form className="auth-card" onSubmit={handleSubmit}>
+      <div className="authx-right">
+        <div className="authx-card-wrapper">
+          <form className="authx-card" onSubmit={handleSubmit}>
             <h2>Create your account</h2>
 
-            {error && <div className="error">{error}</div>}
+            {error && <div className="authx-error">{error}</div>}
 
             <input
               placeholder="Name"
@@ -78,11 +78,11 @@ export default function Signup() {
               }
             />
 
-            <button className="primary-btn" disabled={loading}>
+            <button className="authx-primary-btn" disabled={loading}>
               {loading ? "Creating..." : "Sign Up"}
             </button>
 
-            <Link to="/login" className="ghost-btn">
+            <Link to="/login" className="authx-ghost-btn">
               Sign In
             </Link>
           </form>
