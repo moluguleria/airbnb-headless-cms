@@ -6,13 +6,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { name: "Active", value: 1122 },
-  { name: "Inactive", value: 162 },
-  { name: "Blocked", value: 4 },
-];
+export default function ListingStatusChart({ data = [] }) {
+  // ✅ Prevent crash
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <div className="admin-db-panel">
+        <h3>Listings Status</h3>
+        <p style={{ padding: "20px", color: "#666" }}>
+          No listing status data available
+        </p>
+      </div>
+    );
+  }
 
-export default function ListingStatusChart() {
   return (
     <div className="admin-db-panel">
       <h3>Listings Status</h3>
@@ -22,7 +28,11 @@ export default function ListingStatusChart() {
           <BarChart data={data}>
             <XAxis dataKey="name" />
             <Tooltip />
-            <Bar dataKey="value" fill="#6366f1" radius={[6, 6, 0, 0]} />
+            <Bar
+              dataKey="value"
+              fill="#6366f1"
+              radius={[6, 6, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

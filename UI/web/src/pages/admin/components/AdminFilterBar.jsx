@@ -1,29 +1,38 @@
 import "./AdminFilterBar.css";
 
 export default function AdminFilterBar({
-  searchPlaceholder = "Search...",
+  filters,
+  setFilters,
   showStatus = true,
   showType = false,
   showDate = false,
-
-  showCrudActions = true,
-  actionLabel = "Apply",
+  onReset,
 }) {
   return (
     <div className="admin-filter-wrapper">
-         <h2>Apply Filters</h2>
-      {/* ================= FILTER ROW ================= */}
+      <h2>Apply Filters</h2>
+
       <div className="admin-filter-bar">
         {/* SEARCH */}
         <input
           type="text"
-          placeholder={searchPlaceholder}
           className="admin-filter-input"
+          placeholder="Search..."
+          value={filters.search}
+          onChange={(e) =>
+            setFilters({ ...filters, search: e.target.value })
+          }
         />
 
         {/* STATUS */}
         {showStatus && (
-          <select className="admin-filter-select">
+          <select
+            className="admin-filter-select"
+            value={filters.status}
+            onChange={(e) =>
+              setFilters({ ...filters, status: e.target.value })
+            }
+          >
             <option value="">Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -33,7 +42,13 @@ export default function AdminFilterBar({
 
         {/* TYPE */}
         {showType && (
-          <select className="admin-filter-select">
+          <select
+            className="admin-filter-select"
+            value={filters.type}
+            onChange={(e) =>
+              setFilters({ ...filters, type: e.target.value })
+            }
+          >
             <option value="">Type</option>
             <option value="stay">Stay</option>
             <option value="rental">Rental</option>
@@ -41,34 +56,36 @@ export default function AdminFilterBar({
           </select>
         )}
 
-        {/* DATE RANGE */}
+        {/* DATE */}
         {showDate && (
           <div className="admin-filter-date-range">
-            <input type="date" className="admin-filter-date" />
+            <input
+              type="date"
+              className="admin-filter-date"
+              value={filters.from}
+              onChange={(e) =>
+                setFilters({ ...filters, from: e.target.value })
+              }
+            />
             <span>to</span>
-            <input type="date" className="admin-filter-date" />
+            <input
+              type="date"
+              className="admin-filter-date"
+              value={filters.to}
+              onChange={(e) =>
+                setFilters({ ...filters, to: e.target.value })
+              }
+            />
           </div>
         )}
       </div>
 
-      {/* ================= ACTION ROW ================= */}
+      {/* RESET */}
       <div className="admin-filter-actions-row">
-        {/* FILTER ACTIONS */}
-        <div className="admin-filter-actions-left">
-          <button className="btn primary">{actionLabel}</button>
-          <button className="btn secondary">Reset</button>
-        </div>
-
-        {/* CRUD / BULK ACTIONS */}
-        {showCrudActions && (
-          <div className="admin-filter-actions-right">
-            <button className="btn outline">Update</button>
-            <button className="btn warning">Block</button>
-            <button className="btn danger">Delete</button>
-          </div>
-        )}
+        <button className="btn secondary" onClick={onReset}>
+          Reset
+        </button>
       </div>
-
     </div>
   );
 }

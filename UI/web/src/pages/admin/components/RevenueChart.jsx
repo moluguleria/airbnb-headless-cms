@@ -8,16 +8,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { month: "Jan", revenue: 180000 },
-  { month: "Feb", revenue: 210000 },
-  { month: "Mar", revenue: 240000 },
-  { month: "Apr", revenue: 220000 },
-  { month: "May", revenue: 260000 },
-  { month: "Jun", revenue: 300000 },
-];
+export default function RevenueChart({ data = [] }) {
+  // 🔥 Prevent crash
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <div className="admin-db-panel">
+        <h3>Revenue Trend</h3>
+        <p style={{ padding: "20px", color: "#666" }}>
+          No revenue data available
+        </p>
+      </div>
+    );
+  }
 
-export default function RevenueChart() {
   return (
     <div className="admin-db-panel">
       <h3>Revenue Trend</h3>

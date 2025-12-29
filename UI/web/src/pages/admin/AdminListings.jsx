@@ -1,104 +1,96 @@
+import { useEffect, useState } from "react";
 import "./AdminListings.css";
 import AdminFilterBar from "./components/AdminFilterBar";
-import { useState } from "react";
+import { fetchAllListings } from "../../api/adminListing";
 
 export default function AdminListings() {
-  const [selected, setSelected] = useState([]);
+  const [listings, setListings] = useState([]);
+  const [filters, setFilters] = useState({
+    search: "",
+    type: "",
+    status: "",
+    from: "",
+    to: "",
+  });
 
-  const toggleSelect = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const data = await fetchAllListings();
+        setListings(data);
+      } catch (err) {
+        console.error("API ERROR:", err);
+      }
+    };
+
+    load();
+  }, []);
+
+  const filtered = listings.filter((item) => {
+    const title = item.title?.toLowerCase() || "";
+    const type = item.type || "";
+    const created = new Date(item.createdAt);
+
+    return (
+      (!filters.search ||
+        title.includes(filters.search.toLowerCase())) &&
+      (!filters.type || filters.type === type) &&
+      (!filters.from || created >= new Date(filters.from)) &&
+      (!filters.to || created <= new Date(filters.to))
     );
-  };
+  });
 
   return (
     <div className="admin-page">
+      <h1>Listings</h1>
 
-      {/* HEADER */}
-      <div className="admin-page-header">
-        <div>
-          <h1>Listings</h1>
-          <p>Manage all platform listings</p>
-        </div>
-
-        {/* <button className="primary-btn">+ Add Listing</button> */}
-      </div>
-
-      {/* FILTERS */}
       <AdminFilterBar
-        searchPlaceholder="Search listings..."
+        filters={filters}
+        setFilters={setFilters}
         showType
-        showStatus
         showDate
-        actionLabel="Add Listing"
+        onReset={() =>
+          setFilters({
+            search: "",
+            type: "",
+            status: "",
+            from: "",
+            to: "",
+          })
+        }
       />
 
-      {/* BULK ACTIONS */}
-      {selected.length > 0 && (
-        <div className="admin-bulk-bar">
-          <span>{selected.length} selected</span>
-          <div>
-            <button className="secondary-btn">Block</button>
-            <button className="danger-btn">Delete</button>
-          </div>
-        </div>
-      )}
+      <table className="admin-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Created</th>
+          </tr>
+        </thead>
 
-      {/* TABLE */}
-      <div className="admin-panel">
-        <table className="admin-table">
-          <thead>
+        <tbody>
+          {filtered.length > 0 ? (
+            filtered.map((item) => (
+              <tr key={item.id}>
+                <td>{item.title || "Untitled"}</td>
+                <td>{item.type || "N/A"}</td>
+                <td>₹{item.price || 0}</td>
+                <td>
+                  {new Date(item.createdAt).toLocaleDateString()}
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <th>
-                <input type="checkbox" />
-              </th>
-              <th>Listing</th>
-              <th>Host</th>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Price</th>
-              <th>Created</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>
-                <input
-                  type="checkbox"
-                  onChange={() => toggleSelect(1)}
-                  checked={selected.includes(1)}
-                />
-              </td>
-              <td>
-                <div className="listing-cell">
-                  <strong>StayVista</strong>
-                  <span>Goa, India</span>
-                </div>
-              </td>
-              <td>Rahul</td>
-              <td>
-                <span className="badge badge-blue">Stay</span>
-              </td>
-              <td>
-                <span className="badge badge-green">Active</span>
-              </td>
-              <td>₹4,500</td>
-              <td>12 Mar 2025</td>
-              <td>
-                <div className="action-group">
-                  <button className="action-btn">View</button>
-                  <button className="action-btn">Edit</button>
-                  <button className="action-btn warn">Block</button>
-                  <button className="action-btn danger">Delete</button>
-                </div>
+              <td colSpan="4" style={{ textAlign: "center" }}>
+                No listings found
               </td>
             </tr>
-          </tbody>
-        </table>
-      </div>
-
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

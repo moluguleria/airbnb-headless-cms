@@ -17,6 +17,11 @@ API.interceptors.request.use((config) => {
 export const getListings = () =>
   API.get("/listings?populate=*");
 
+export const getAdminListings = () =>
+  API.get(
+    "/listings?populate[owner][populate]=*&populate[location]=*"
+  );
+
 export const getListingBySlug = (slug) =>
   API.get(`/listings?populate=*&filters[slug][$eq]=${slug}`);
 

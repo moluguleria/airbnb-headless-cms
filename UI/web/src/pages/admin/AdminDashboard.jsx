@@ -1,142 +1,204 @@
+import { useEffect, useState } from "react";
 import "./AdminDashboard.css";
+
 import RevenueChart from "./components/RevenueChart";
 import BookingTypeChart from "./components/BookingTypeChart";
 import ListingStatusChart from "./components/ListingStatusChart";
 import AdminFilterBar from "./components/AdminFilterBar";
 
+import { getListings } from "../../api/api";
+
 export default function AdminDashboard() {
+  const [listings, setListings] = useState([]);
+
+  const [filters, setFilters] = useState({
+    search: "",
+    type: "",
+    status: "",
+    from: "",
+    to: "",
+  });
+
+  /* =======================
+     FETCH LISTINGS
+  ======================= */
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const res = await getListings();
+        setListings(res.data.data || []);
+      } catch (err) {
+        console.error("Failed to load listings", err);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  /* =======================
+     FILTER LOGIC
+  ======================= */
+  const filteredListings = listings.filter((item) => {
+    const title = item.title?.toLowerCase() || "";
+    const type = item.type || "";
+    const created = new Date(item.createdAt);
+
+    const matchSearch =
+      !filters.search ||
+      title.includes(filters.search.toLowerCase());
+
+    const matchType =
+      !filters.type || filters.type === type;
+
+    const matchDate =
+      (!filters.from || new Date(filters.from) <= created) &&
+      (!filters.to || new Date(filters.to) >= created);
+
+    return matchSearch && matchType && matchDate;
+  });
+
+  /* =======================
+     DASHBOARD STATS
+  ======================= */
+
+  const totalListings = filteredListings.length;
+
+  const totalRevenue = filteredListings.reduce(
+    (sum, i) => sum + (i.price || 0),
+    0
+  );
+
+  // ✅ TOTAL HOSTS (unique owners)
+const totalHosts = new Set( listings.map((l) => l.attributes?.owner?.data?.id) ).size;
+
+
+  const stayCount = filteredListings.filter(
+    (i) => i.type === "stay"
+  ).length;
+
+  const rentalCount = filteredListings.filter(
+    (i) => i.type === "rental"
+  ).length;
+
+  const experienceCount = filteredListings.filter(
+    (i) => i.type === "experience"
+  ).length;
+
+  const revenueData = Object.values(
+    filteredListings.reduce((acc, item) => {
+      const month = new Date(item.createdAt).toLocaleString(
+        "default",
+        { month: "short" }
+      );
+
+      if (!acc[month]) acc[month] = { month, revenue: 0 };
+      acc[month].revenue += item.price || 0;
+
+      return acc;
+    }, {})
+  );
+
+  /* =======================
+     UI
+  ======================= */
   return (
     <div id="admin-dashboard-root">
       <div className="admin-db">
+
         {/* HEADER */}
         <div className="admin-db-top">
           <h1>Admin Dashboard</h1>
           <p>Platform overview & system metrics</p>
         </div>
 
+        {/* FILTER BAR */}
         <AdminFilterBar
-          searchPlaceholder="Search listings..."
+          filters={filters}
+          setFilters={setFilters}
+          onReset={() =>
+            setFilters({
+              search: "",
+              type: "",
+              status: "",
+              from: "",
+              to: "",
+            })
+          }
           showType
           showStatus
           showDate
-          actionLabel="Add Listing"
         />
 
-        {/* KPI ROW */}
+        {/* KPI CARDS */}
         <div className="admin-db-kpi-row">
           <div className="admin-db-kpi-card">
             <p>Total Listings</p>
-            <h2>1,284</h2>
-            <span className="admin-db-kpi-sub">+12 this month</span>
+            <h2>{totalListings}</h2>
           </div>
 
           <div className="admin-db-kpi-card">
             <p>Total Hosts</p>
-            <h2>312</h2>
-            <span className="admin-db-kpi-sub">+8 new</span>
+            <h2>{totalHosts}</h2>
           </div>
 
-          <div className="admin-db-kpi-card">
-            <p>Total Bookings</p>
-            <h2>8,492</h2>
-            <span className="admin-db-kpi-sub">+214</span>
-          </div>
-
-          <div className="admin-db-kpi-card admin-db-emphasis">
-            <p>Monthly Revenue</p>
-            <h2>₹24,85,200</h2>
-            <span className="admin-db-kpi-sub">↑ 18%</span>
-          </div>
+          {/* <div className="admin-db-kpi-card">
+            <p>Total Revenue</p>
+            <h2>₹{totalRevenue}</h2>
+          </div> */}
         </div>
 
-        {/* ANALYTICS SECTION */}
-        <div className="admin-db-analytics">
-          <div className="admin-db-panel admin-db-chart-lg">
-            <h3>Revenue Trend</h3>
-            <RevenueChart />
-          </div>
+        {/* CHARTS */}
+        {filteredListings.length > 0 && (
+          <div className="admin-db-analytics">
+            <RevenueChart data={revenueData} />
 
-          <div className="admin-db-chart-stack">
-            <div className="admin-db-panel">
-              <h3>Bookings by Type</h3>
-              <BookingTypeChart />
-            </div>
+            <ListingStatusChart
+              data={[{ name: "Active", value: totalListings }]}
+            />
 
-            <div className="admin-db-panel">
-              <h3>Listings Status</h3>
-              <ListingStatusChart />
-            </div>
+            <BookingTypeChart
+              data={[
+                { name: "Stays", value: stayCount },
+                { name: "Rentals", value: rentalCount },
+                { name: "Experiences", value: experienceCount },
+              ]}
+            />
           </div>
+        )}
+
+        {/* TABLE */}
+        <div className="admin-db-panel">
+          <h3>All Listings</h3>
+
+          <table className="admin-db-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredListings.length ? (
+                filteredListings.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.title || "Untitled"}</td>
+                    <td>{item.type || "N/A"}</td>
+                    <td>₹{item.price || 0}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3" style={{ textAlign: "center" }}>
+                    No listings found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
 
-        {/* DATA SECTION */}
-        <div className="admin-db-data">
-          <div className="admin-db-panel">
-            <div className="admin-db-panel-header">
-              <h3>Recent Bookings</h3>
-              <button className="admin-db-link-btn">View all</button>
-            </div>
-
-            <table className="admin-db-table">
-              <thead>
-                <tr>
-                  <th>Listing</th>
-                  <th>Guest</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>StayVista</td>
-                  <td>Rahul</td>
-                  <td>₹4,500</td>
-                  <td>
-                    <span className="admin-db-status success">Completed</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>LakeView</td>
-                  <td>Ananya</td>
-                  <td>₹6,200</td>
-                  <td>
-                    <span className="admin-db-status pending">Pending</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>CityNest</td>
-                  <td>Arjun</td>
-                  <td>₹3,100</td>
-                  <td>
-                    <span className="admin-db-status success">Completed</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="admin-db-panel">
-            <h3>System Insights</h3>
-            <ul className="admin-db-insights">
-              <li>
-                <span>Active Listings</span>
-                <strong>1,122</strong>
-              </li>
-              <li>
-                <span>Inactive Listings</span>
-                <strong>162</strong>
-              </li>
-              <li>
-                <span>Blocked Users</span>
-                <strong>4</strong>
-              </li>
-              <li>
-                <span>Avg. Booking Value</span>
-                <strong>₹5,200</strong>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );
