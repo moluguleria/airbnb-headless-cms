@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "http://localhost:1337/api",
+  baseURL: "https://certain-song-d8bae577d2.strapiapp.com/api",
 });
 
 /* 🔐 Attach JWT */
@@ -36,7 +36,7 @@ export const getMyListings = () => {
   const token = localStorage.getItem("token");
 
   return axios.get(
-    "http://localhost:1337/api/listings?populate=*",
+    "https://certain-song-d8bae577d2.strapiapp.com/api/listings?populate=*",
     {
       headers: {
         Authorization: `Bearer ${token}`,

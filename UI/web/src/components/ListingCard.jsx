@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./ListingCard.css";
 
-const STRAPI_URL = "http://localhost:1337";
+const STRAPI_URL = "https://certain-song-d8bae577d2.strapiapp.com";
 
 export default function ListingCard({ listing }) {
   const imageUrl = listing.images?.[0]?.url;
@@ -11,7 +11,7 @@ export default function ListingCard({ listing }) {
       <img
         src={
           imageUrl
-            ? `${STRAPI_URL}${imageUrl}`
+            ? `${imageUrl}`
             : "/placeholder.jpg"
         }
         alt={listing.title}

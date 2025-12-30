@@ -4,7 +4,7 @@ export const fetchAllListings = async () => {
   const token = localStorage.getItem("token");
 
   const res = await axios.get(
-    "http://localhost:1337/api/listings?populate=*",
+    "https://certain-song-d8bae577d2.strapiapp.com/api/listings?populate=*",
     {
       headers: {
         Authorization: `Bearer ${token}`,

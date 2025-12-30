@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:1337/api";
+const API_URL = "https://certain-song-d8bae577d2.strapiapp.com/api";
 
 export const signupUser = (data) =>
   axios.post(`${API_URL}/auth/local/register`, data);

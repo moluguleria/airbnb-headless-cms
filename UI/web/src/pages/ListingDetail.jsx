@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import "./ListingDetail.css";
 
 const STRAPI_URL =
-  import.meta.env.VITE_STRAPI_URL || "http://localhost:1337";
+   "https://certain-song-d8bae577d2.strapiapp.com/";
 
 export default function ListingDetail() {
   const { slug } = useParams();
@@ -159,7 +159,7 @@ export default function ListingDetail() {
         {listing.images?.length > 0 ? (
           <img
             className="gallery-main"
-            src={`${STRAPI_URL}${listing.images[0].url}`}
+            src={`${listing.images[0].url}`}
             onClick={() => {
               setActiveImg(0);
               setShowModal(true);
