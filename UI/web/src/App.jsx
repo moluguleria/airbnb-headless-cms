@@ -6,7 +6,7 @@ import Home from "./pages/Home/Home";
 import Listings from "./pages/Listings";
 import ListingDetail from "./pages/ListingDetail";
 import Login from "./pages/auth/Login.jsx";
-import Signup from "./pages/Auth/Signup.jsx";
+import Signup from "./pages/auth/Signup.jsx";
 
 /* USER DASHBOARD */
 import Dashboard from "./pages/Dashboard/Dashboard";
