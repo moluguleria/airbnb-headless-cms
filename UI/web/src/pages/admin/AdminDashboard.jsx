@@ -63,10 +63,14 @@ export default function AdminDashboard() {
 
   const totalListings = filteredListings.length;
 
-  const totalRevenue = filteredListings.reduce(
-    (sum, i) => sum + (i.price || 0),
-    0
-  );
+  // const totalRevenue = filteredListings.reduce(
+  //   (sum, i) => sum + (i.price || 0),
+  //   0
+  // );
+const totalRevenue = filteredListings.reduce(
+  (sum, i) => sum + parseFloat(i.price || 0),
+  0
+);
 
   // ✅ TOTAL HOSTS (unique owners)
 const totalHosts = new Set( listings.map((l) => l.attributes?.owner?.data?.id) ).size;
@@ -85,18 +89,19 @@ const totalHosts = new Set( listings.map((l) => l.attributes?.owner?.data?.id) )
   ).length;
 
   const revenueData = Object.values(
-    filteredListings.reduce((acc, item) => {
-      const month = new Date(item.createdAt).toLocaleString(
-        "default",
-        { month: "short" }
-      );
+  filteredListings.reduce((acc, item) => {
+    const month = new Date(item.createdAt).toLocaleString(
+      "default",
+      { month: "short" }
+    );
 
-      if (!acc[month]) acc[month] = { month, revenue: 0 };
-      acc[month].revenue += item.price || 0;
+    if (!acc[month]) acc[month] = { month, revenue: 0 };
 
-      return acc;
-    }, {})
-  );
+    acc[month].revenue += parseFloat(item.price || 0);
+
+    return acc;
+  }, {})
+);
 
   /* =======================
      UI
@@ -141,10 +146,10 @@ const totalHosts = new Set( listings.map((l) => l.attributes?.owner?.data?.id) )
             <h2>{totalHosts}</h2>
           </div>
 
-          {/* <div className="admin-db-kpi-card">
+          <div className="admin-db-kpi-card">
             <p>Total Revenue</p>
             <h2>₹{totalRevenue}</h2>
-          </div> */}
+          </div>
         </div>
 
         {/* CHARTS */}

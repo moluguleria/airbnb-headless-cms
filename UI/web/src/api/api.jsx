@@ -25,6 +25,11 @@ export const getAdminListings = () =>
 export const getListingBySlug = (slug) =>
   API.get(`/listings?populate=*&filters[slug][$eq]=${slug}`);
 
+// export const getUsers = () =>
+//   API.get("/users");
+export const getUsers = () =>
+  API.get("/users?populate=role");
+
 /* ===== DASHBOARD ===== */
 /* ✅ FILTER BY owner RELATION */
 export const getMyListings = () => {

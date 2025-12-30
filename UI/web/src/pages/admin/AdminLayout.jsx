@@ -13,7 +13,7 @@ export default function AdminLayout() {
           <NavLink to="/admin/listings">Listings</NavLink>
           <NavLink to="/admin/bookings">Bookings</NavLink>
           <NavLink to="/admin/users">Users</NavLink>
-          <NavLink to="/admin/analytics">Analytics</NavLink>
+          {/* <NavLink to="/admin/analytics">Analytics</NavLink> */}
           <NavLink to="/admin/settings">Settings</NavLink>
         </nav>
       </aside>

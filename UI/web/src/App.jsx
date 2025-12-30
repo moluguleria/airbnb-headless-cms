@@ -19,7 +19,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminListings from "./pages/admin/AdminListings";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminBookings from "./pages/admin/AdminBookings";
-import AdminAnalytics from "./pages/admin/AdminAnalytics";
+// import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
 /* ROUTE GUARDS */
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -79,7 +79,7 @@ export default function App() {
           <Route path="listings" element={<AdminListings />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="bookings" element={<AdminBookings />} />
-          <Route path="analytics" element={<AdminAnalytics />} />
+          {/* <Route path="analytics" element={<AdminAnalytics />} /> */}
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
