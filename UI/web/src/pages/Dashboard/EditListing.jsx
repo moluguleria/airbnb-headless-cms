@@ -12,42 +12,70 @@ export default function EditListing() {
     type: "stay",
   });
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-  API.get(`/listings/${id}?populate=*`)
-    .then((res) => {
-      const data = res.data.data.attributes;
-      setForm({
-        title: data.title,
-        price: data.price,
-        type: data.type,
-      });
-    })
-    .catch(() => {
-      alert("You are not allowed to edit this listing");
-      navigate("/dashboard");
-    });
-}, [id, navigate]);
+    const fetchListing = async () => {
+      try {
+        const res = await API.get(`/listings/${id}?populate=owner`);
+
+        const listing = res.data.data;
+        const currentUser = JSON.parse(localStorage.getItem("user"));
+
+        // 🚨 BLOCK IF NOT LOGGED IN
+        if (!currentUser) {
+          alert("Please login first");
+          return navigate("/login");
+        }
+
+        // 🚨 BLOCK IF NOT OWNER
+        if (listing.attributes.owner.data.id !== currentUser.id) {
+          alert("You are not allowed to edit this listing");
+          return navigate("/dashboard");
+        }
+
+        // ✅ Allowed
+        setForm({
+          title: listing.attributes.title,
+          price: listing.attributes.price,
+          type: listing.attributes.type,
+        });
+
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        alert("Access denied");
+        navigate("/dashboard");
+      }
+    };
+
+    fetchListing();
+  }, [id, navigate]);
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
 
-    await API.put(`/listings/${id}`, {
-      data: {
-        title: form.title,
-        price: Number(form.price),
-        type: form.type,
-      },
-    });
+    try {
+      await API.put(`/listings/${id}`, {
+        data: {
+          title: form.title,
+          price: Number(form.price),
+          type: form.type,
+        },
+      });
 
-    navigate("/dashboard");
+      alert("Listing updated successfully");
+      navigate("/dashboard");
+    } catch (err) {
+      alert("Update failed");
+    }
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div style={{ padding: 40 }}>
@@ -58,6 +86,7 @@ export default function EditListing() {
           name="title"
           value={form.title}
           onChange={handleChange}
+          required
         />
 
         <input
@@ -65,6 +94,7 @@ export default function EditListing() {
           type="number"
           value={form.price}
           onChange={handleChange}
+          required
         />
 
         <select
@@ -77,9 +107,7 @@ export default function EditListing() {
           <option value="rental">Rental</option>
         </select>
 
-        <button type="submit">
-          Save
-        </button>
+        <button type="submit">Save</button>
       </form>
     </div>
   );
