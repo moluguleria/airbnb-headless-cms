@@ -5,8 +5,8 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home/Home";
 import Listings from "./pages/Listings";
 import ListingDetail from "./pages/ListingDetail";
-import Login from "./pages/Auth/Login";
-import Signup from "./pages/Auth/Signup";
+import Login from "./pages/auth/Login.jsx";
+import Signup from "./pages/Auth/Signup.jsx";
 
 /* USER DASHBOARD */
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -19,7 +19,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminListings from "./pages/admin/AdminListings";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminBookings from "./pages/admin/AdminBookings";
-// import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSettings from "./pages/admin/AdminSettings";
 /* ROUTE GUARDS */
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -79,7 +78,6 @@ export default function App() {
           <Route path="listings" element={<AdminListings />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="bookings" element={<AdminBookings />} />
-          {/* <Route path="analytics" element={<AdminAnalytics />} /> */}
           <Route path="settings" element={<AdminSettings />} />
         </Route>
 
